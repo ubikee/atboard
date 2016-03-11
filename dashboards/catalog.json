@@ -1,0 +1,35 @@
+{
+    "title": "atSistemas widgts catalog"
+    , "titleVisible": true
+    , "description": "atSistemas widgets catalog",
+
+    "layout": {
+        "widgets": [
+            {
+                "row": 1
+                , "col": 1
+                , "width": 2
+                , "height": 2
+                , "widget": "completion"
+                , "job": "randomNumber"
+                , "config": "completion1"
+            }
+            , {
+                "row": 1
+                , "col": 1
+                , "width": 2
+                , "height": 2
+                , "widget": "completion"
+                , "job": "randomNumber"
+                , "config": "completion1"
+            }
+        ]
+    },
+
+    "config": {
+        "completion1": {
+            "widgetTitle": "Upcoming US Holidays"
+            , "interval": 1000
+        }
+    }
+}
