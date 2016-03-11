@@ -7,7 +7,6 @@ widget = {
         if (data.title) {
             $('h2', el).text(data.title);
         }
-        console.log('refresh mission value')
         document.querySelector('ubik-gauge').value = data.value
     }
 };

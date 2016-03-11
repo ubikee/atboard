@@ -21,7 +21,7 @@ module.exports = {
 
         var logger = dependencies.logger;
 
-        jobCallback(err, {
+        jobCallback(false, {
             title: config.widgetTitle
             , value: Math.floor((Math.random() * 100) + 1)
         });
