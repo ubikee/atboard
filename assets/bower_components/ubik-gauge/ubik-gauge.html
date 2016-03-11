@@ -1,0 +1,186 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="ubik-gauge">
+
+    <template>
+        <style>
+            :host {
+                display: flex;
+                justify-content: center;
+            }
+            
+            svg {
+                flex: 1;
+            }
+            
+            text {
+                fill-opacity: 0.8;
+                font: 1em sans-serif;
+            }
+            
+            tspan {
+                font-size: 0.6em;
+            }
+        </style>
+
+        <svg id="chart" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+            <text id="label" text-anchor="middle" x="50" y="55">
+                [[value]]
+                <tspan>[[unit]]</tspan>
+            </text>
+        </svg>
+
+    </template>
+
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+
+                is: 'ubik-gauge',
+
+                properties: {
+
+                    /**
+                     * 
+                     */
+                    value: {
+                        type: Number
+                        , value: 50
+                        , notify: true
+                        , observer: '_valueChanged'
+                    },
+
+                    /**
+                     * units name to be displayed next to the value
+                     */
+                    unit: {
+                        type: String
+                        , value: '%'
+                    },
+
+                    /**
+                     * treshold that should fire an alarm when the value exceedes it.
+                     */
+                    treshold: {
+                        type: Number
+                        , value: 80
+                        , notify: true
+                        , observer: '_tresholdChanged'
+                    },
+
+                    /**
+                     * toggles gauge shape fromm circle to semicircle
+                     */
+                    semicircle: {
+                        type: Boolean
+                        , value: false
+                        , notify: true
+                        , observer: '_semicircleChanged'
+                    },
+
+                    /**
+                     * RGB colors array: [ <value>, <treshold>, <base>, <alarm> ]
+                     */
+                    colors: {
+                        type: Array
+                        , value: function () {
+                            return ['#0F0', '#FAA', '#EEE', '#F00']
+                        }
+                        , notify: true
+                    }
+                },
+
+                // Life Cycle
+
+                ready: function () {
+                    var radius = 50 - (5 / 2);
+                    this._createArc(100, 5, radius, this.colors[2]);
+                    this._tresholdArc = this._createArc(this.treshold, 5, radius, this.colors[1]);
+                    this._valueArc = this._createArc(this.value, 5, radius, this.colors[0]);
+                    this._tresholdExceeded(this.value, this.treshold, this.colors);
+                },
+
+                // Observers
+
+                observers: ['_tresholdExceeded(value, treshold, colors)'],
+
+                _valueChanged: function (newValue, oldValue) {
+                    this._resizeArc(this._valueArc, newValue);
+                },
+
+                _tresholdChanged: function (newValue, oldValue) {
+                    this._resizeArc(this._tresholdArc, newValue);
+                },
+
+                _semicircleChanged: function (newValue) {
+                    if (newValue) {
+                        this.$.chart.setAttribute('viewBox', '0 0 100 50');
+                        this.$.label.setAttribute('y', '48');
+                    }
+                },
+
+                _tresholdExceeded: function (value, treshold, colors) {
+                    var color = value > treshold ? colors[3] : colors[0];
+                    this._colorizeArc(this._valueArc, color);
+                },
+
+                // Internal
+
+                _valueArc: null,
+
+                _tresholdArc: null,
+
+                _createArc: function (percentage, width, rad1, color) {
+                    var path = this._newPath(percentage, rad1, width, color);
+                    this.$.chart.appendChild(path);
+                    return path;
+                },
+
+                _colorizeArc: function (arc, color) {
+                    if (arc)
+                        arc.setAttribute("stroke", color);
+                },
+
+                _resizeArc: function (arc, percentage) {
+                    var radius = 50 - (5 / 2);
+                    if (arc)
+                        arc.setAttribute("d", this._calculatePath(percentage, radius));
+                },
+
+                _newPath: function (percentage, radius, width, color) {
+                    var svgns = "http://www.w3.org/2000/svg";
+                    var path = document.createElementNS(svgns, "path");
+                    path.setAttribute("d", this._calculatePath(percentage, radius));
+                    path.setAttribute("fill", 'none');
+                    path.setAttribute("stroke", color);
+                    path.setAttribute("stroke-width", width);
+                    path.setAttribute("stroke-linecap", "round");
+                    return path;
+                },
+
+                _calculatePath: function (percentage, rad1) {
+
+                    var unit = (Math.PI * 2) / 100;
+                    var angle = (percentage * unit - 0.001);
+                    var large_arc_flag = percentage > 50 ? 1 : 0;
+
+                    if (this.semicircle) {
+                        angle = angle / 2;
+                        large_arc_flag = 0;
+                    }
+
+                    var x1 = 50 - rad1;
+                    var x2 = 50 - rad1 * Math.cos(angle);
+                    var y2 = 50 - rad1 * Math.sin(angle);
+
+                    var d = " M " + x1 + ", 50 " + " A " + rad1 + "," + rad1 + " 0 " + large_arc_flag + " 1 " + x2 + "," + y2;
+
+                    return d;
+                }
+
+            });
+        })();
+    </script>
+</dom-module>

@@ -1,12 +1,15 @@
-echo "add bower dependencies"
-
 var copy = require('copy-files');
+var path = require('path');
+var ncp = require('ncp').ncp;
 
-copy({
-    files: {
-        'Chart.js': './node_modules/chart.js/Chart.js'
-        , 'linq.js': './node_modules/linq/linq.js'
-        , 'moment.js': './node_modules/moment/moment.js'
-    }
-    , dest: '../../assets/javascripts'
-, }, function (err) {});
+var source1 = path.join(_dirname, './templates');
+var destin1 = path.join(_dirname, '../../templates');
+ncp(source1, destin1, function (err) {
+    console.log(err);
+});
+
+var source2 = path.join(_dirname, './assets/bower_components');
+var destin2 = path.join(_dirname, '../../assets/bower_components');
+ncp(source2, destin2, function (err) {
+    console.log(err);
+});

@@ -1,0 +1,98 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>ubik-gauge2 Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../ubik-gauge.html">
+
+    <style is="custom-style">
+        /* Will be prevented from affecting local DOM of Polymer elements */
+        
+        * {
+            box-sizing: border-box;
+        }
+        /* Use the :root selector to define custom properties and mixins */
+        /* at the document level  */
+        
+        :root {}
+    </style>
+
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        
+        main {
+            flex: 1;
+        }
+        
+        article {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 20px;
+        }
+        
+        ubik-gauge {
+            flex: 1;
+        }
+        
+        article>div {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body unresolved>
+    <header>
+        <p>Examples of <code>&lt;ubik-gauge&gt;</code>:</p>
+    </header>
+    <main>
+        <article>
+            <ubik-gauge id="gauge1" value="30" unit="%" treshold="60" colors='["#0F0","#FCC","#EEE", "#F00"]'></ubik-gauge>
+            <div></div>
+        </article>
+        <article>
+            <ubik-gauge id="gauge2" value="30" unit="%" treshold="60" colors='["#0F0","#FCC","#EEE", "#F00"]' semicircle></ubik-gauge>
+            <div></div>
+        </article>
+        <article>
+            <ubik-gauge id="gauge3" value="10" unit="%" treshold="50" colors='["#0F0","#FCC","#EEE", "#F00"]'></ubik-gauge>
+            <div></div>
+        </article>
+        <article>
+    </main>
+    <footer>footer
+    </footer>
+
+    <script>
+        var gauge1 = document.querySelector('#gauge1');
+        var gauge2 = document.querySelector('#gauge2');
+        var gauge3 = document.querySelector('#gauge3');
+
+        setInterval(random(gauge1), 1000);
+        setInterval(random(gauge2), 500);
+        setInterval(random(gauge3), 800);
+
+        function random(gauge) {
+            return function () {
+                gauge.value = Math.floor((Math.random() * 100) + 1);
+            }
+        }
+    </script>
+</body>
+
+</html>
